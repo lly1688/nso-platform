@@ -1,0 +1,6 @@
+spring:
+  flyway:
+    enabled: ${NSO_FLYWAY_ENABLED:false}
+
+knife4j:
+  enable: true

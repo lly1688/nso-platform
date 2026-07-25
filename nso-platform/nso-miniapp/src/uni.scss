@@ -1,0 +1,32 @@
+$nso-primary: #1769e0;
+$nso-success: #1f9d55;
+$nso-warning: #d97706;
+$nso-danger: #dc2626;
+$nso-text: #1f2937;
+$nso-muted: #6b7280;
+$nso-border: #e5e7eb;
+$nso-bg: #f6f7fb;
+
+page {
+  min-height: 100%;
+  background: $nso-bg;
+  color: $nso-text;
+  font-size: 28rpx;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 32rpx;
+  box-sizing: border-box;
+}
+
+.page-title {
+  margin-bottom: 16rpx;
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+.page-desc {
+  color: $nso-muted;
+  line-height: 1.6;
+}

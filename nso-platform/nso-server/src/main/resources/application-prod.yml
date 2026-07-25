@@ -1,0 +1,10 @@
+spring:
+  flyway:
+    enabled: ${NSO_FLYWAY_ENABLED:true}
+
+knife4j:
+  enable: false
+
+logging:
+  level:
+    com.nso: info

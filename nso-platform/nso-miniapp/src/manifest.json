@@ -1,0 +1,16 @@
+{
+  "name": "智慧非标协同",
+  "appid": "__UNI__NSO_PLATFORM",
+  "description": "智慧非标订单打样与变更协同平台微信小程序",
+  "versionName": "0.0.1",
+  "versionCode": "1",
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "minified": true
+    },
+    "usingComponents": true
+  }
+}
