@@ -11,21 +11,25 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>nso-system</artifactId>
+    <artifactId>nso-quartz</artifactId>
     <packaging>jar</packaging>
 
-    <name>nso-system</name>
-    <description>系统与业务模块：用户权限管理 + 九个核心业务域（客户、项目、文档、样品、变更、任务、风险、消息、报表）</description>
+    <name>nso-quartz</name>
+    <description>定时任务模块：风险扫描、临期提醒、超时升级、消息重试、报表汇总</description>
 
     <dependencies>
         <dependency>
             <groupId>com.nso</groupId>
             <artifactId>nso-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.nso</groupId>
+            <artifactId>nso-system</artifactId>
+        </dependency>
 
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
 
         <dependency>
