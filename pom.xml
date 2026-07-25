@@ -36,7 +36,9 @@
         <module>nso-common</module>
         <module>nso-system</module>
         <module>nso-framework</module>
-        <module>nso-server</module>
+        <module>nso-quartz</module>
+        <module>nso-generator</module>
+        <module>nso-admin</module>
     </modules>
 
     <dependencyManagement>
@@ -55,6 +57,21 @@
             <dependency>
                 <groupId>com.nso</groupId>
                 <artifactId>nso-framework</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nso</groupId>
+                <artifactId>nso-quartz</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nso</groupId>
+                <artifactId>nso-generator</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nso</groupId>
+                <artifactId>nso-admin</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

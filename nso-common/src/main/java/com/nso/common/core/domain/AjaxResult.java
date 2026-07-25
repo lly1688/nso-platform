@@ -32,6 +32,10 @@ public class AjaxResult<T> implements Serializable {
         return new AjaxResult<>(ERROR_CODE, message, null);
     }
 
+    public static AjaxResult<Void> error(int code, String message) {
+        return new AjaxResult<>(code, message, null);
+    }
+
     public int getCode() {
         return code;
     }
