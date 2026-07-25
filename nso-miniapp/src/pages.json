@@ -1,0 +1,73 @@
+{
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "工作台"
+      }
+    },
+    {
+      "path": "pages/login/index",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
+      "path": "pages/message/index",
+      "style": {
+        "navigationBarTitleText": "消息"
+      }
+    },
+    {
+      "path": "pages/mine/index",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    }
+  ],
+  "subPackages": [
+    {
+      "root": "pages-project",
+      "pages": [
+        { "path": "list/index", "style": { "navigationBarTitleText": "项目列表" } },
+        { "path": "detail/index", "style": { "navigationBarTitleText": "项目详情" } },
+        { "path": "timeline/index", "style": { "navigationBarTitleText": "项目时间轴" } },
+        { "path": "progress/index", "style": { "navigationBarTitleText": "项目进度" } }
+      ]
+    },
+    {
+      "root": "pages-sample",
+      "pages": [
+        { "path": "list/index", "style": { "navigationBarTitleText": "打样列表" } },
+        { "path": "submit/index", "style": { "navigationBarTitleText": "提交打样" } },
+        { "path": "inspect/index", "style": { "navigationBarTitleText": "样品检验" } },
+        { "path": "confirm/index", "style": { "navigationBarTitleText": "客户确认" } }
+      ]
+    },
+    {
+      "root": "pages-change",
+      "pages": [
+        { "path": "list/index", "style": { "navigationBarTitleText": "变更列表" } },
+        { "path": "create/index", "style": { "navigationBarTitleText": "发起变更" } },
+        { "path": "approve/index", "style": { "navigationBarTitleText": "变更审批" } },
+        { "path": "impact-feedback/index", "style": { "navigationBarTitleText": "影响反馈" } },
+        { "path": "verify/index", "style": { "navigationBarTitleText": "变更验证" } }
+      ]
+    },
+    {
+      "root": "pages-task",
+      "pages": [
+        { "path": "task-list/index", "style": { "navigationBarTitleText": "任务列表" } },
+        { "path": "task-detail/index", "style": { "navigationBarTitleText": "任务详情" } },
+        { "path": "feedback/index", "style": { "navigationBarTitleText": "任务反馈" } },
+        { "path": "risk-handle/index", "style": { "navigationBarTitleText": "风险处置" } }
+      ]
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "智慧非标协同",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#f6f7fb"
+  }
+}
