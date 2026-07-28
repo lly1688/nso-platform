@@ -1,4 +1,16 @@
 spring:
+  datasource:
+    url: ${NSO_DATASOURCE_URL}
+    username: ${NSO_DATASOURCE_USERNAME}
+    password: ${NSO_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: ${NSO_REDIS_HOST}
+      port: ${NSO_REDIS_PORT:6379}
+      database: ${NSO_REDIS_DATABASE:0}
+      password: ${NSO_REDIS_PASSWORD}
+      timeout: 3s
   flyway:
     enabled: ${NSO_FLYWAY_ENABLED:true}
 
@@ -8,3 +20,15 @@ knife4j:
 logging:
   level:
     com.nso: info
+
+nso:
+  security:
+    secret: ${NSO_JWT_SECRET}
+  wechat:
+    mock-enabled: false
+    app-id: ${NSO_WECHAT_APP_ID}
+    app-secret: ${NSO_WECHAT_APP_SECRET}
+  minio:
+    endpoint: ${NSO_MINIO_ENDPOINT}
+    access-key: ${NSO_MINIO_ACCESS_KEY}
+    secret-key: ${NSO_MINIO_SECRET_KEY}
