@@ -1,0 +1,12 @@
+spring:
+  flyway:
+    enabled: true
+  quartz:
+    auto-startup: false
+
+nso:
+  security:
+    issuer: nso-platform-test
+    secret: test-only-signing-secret-that-is-never-used-outside-tests
+  bootstrap:
+    enabled: false

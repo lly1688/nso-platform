@@ -1,51 +1,68 @@
 server:
   port: ${SERVER_PORT:8080}
+  shutdown: graceful
 
 spring:
   application:
-    name: nso-server
-
+    name: nso-platform
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
-
-  datasource:
-    url: ${NSO_DATASOURCE_URL:jdbc:mysql://localhost:3306/nso_platform?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false}
-    username: ${NSO_DATASOURCE_USERNAME:nso_app}
-    password: ${NSO_DATASOURCE_PASSWORD:nso_app_change_me}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  data:
-    redis:
-      host: ${NSO_REDIS_HOST:localhost}
-      port: ${NSO_REDIS_PORT:6379}
-      database: ${NSO_REDIS_DATABASE:0}
-      password: ${NSO_REDIS_PASSWORD:}
-
-  flyway:
-    enabled: ${NSO_FLYWAY_ENABLED:false}
-    locations: classpath:db/migration
-    baseline-on-migrate: true
-
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
   servlet:
     multipart:
-      max-file-size: 50MB
-      max-request-size: 100MB
+      max-file-size: ${NSO_UPLOAD_MAX_FILE_SIZE:50MB}
+      max-request-size: ${NSO_UPLOAD_MAX_REQUEST_SIZE:100MB}
+  flyway:
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    # Notification templates deliberately contain ${...} runtime variables.
+    # They are not Flyway configuration placeholders.
+    placeholder-replacement: false
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org.quartz.jobStore.isClustered: ${NSO_QUARTZ_CLUSTERED:false}
+      org.quartz.jobStore.clusterCheckinInterval: 20000
+      org.quartz.scheduler.instanceId: AUTO
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.nso.system.domain,com.nso.business
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
 
 management:
   endpoints:
     web:
       exposure:
         include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
 
-logging:
-  file:
-    path: logs
-  level:
-    root: info
-    com.nso: debug
-
-mybatis-plus:
-  mapper-locations: classpath*:mapper/**/*.xml
-  type-aliases-package: com.nso.system.domain,com.nso.modules.*.domain
-  configuration:
-    map-underscore-to-camel-case: true
+nso:
+  security:
+    issuer: ${NSO_JWT_ISSUER:nso-platform}
+    secret: ${NSO_JWT_SECRET:}
+    access-token-minutes: ${NSO_ACCESS_TOKEN_MINUTES:30}
+    refresh-token-days: ${NSO_REFRESH_TOKEN_DAYS:7}
+  storage:
+    bucket: ${NSO_MINIO_BUCKET:nso-files}
+  bootstrap:
+    enabled: ${NSO_BOOTSTRAP_ENABLED:false}
+    admin-username: ${NSO_BOOTSTRAP_ADMIN_USERNAME:}
+    admin-password: ${NSO_BOOTSTRAP_ADMIN_PASSWORD:}
+  demo:
+    enabled: ${NSO_DEMO_ENABLED:false}
+    default-password: ${NSO_DEMO_DEFAULT_PASSWORD:}
+  workflow:
+    document:
+      allow-self-publish: ${NSO_WORKFLOW_DOCUMENT_ALLOW_SELF_PUBLISH:false}

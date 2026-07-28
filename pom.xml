@@ -30,6 +30,7 @@
         <knife4j.version>4.5.0</knife4j.version>
         <hutool.version>5.8.34</hutool.version>
         <easyexcel.version>4.0.3</easyexcel.version>
+        <java-jwt.version>4.5.0</java-jwt.version>
     </properties>
 
     <modules>
@@ -95,6 +96,12 @@
                 <groupId>io.minio</groupId>
                 <artifactId>minio</artifactId>
                 <version>${minio.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>${java-jwt.version}</version>
             </dependency>
 
             <!-- Knife4j API文档 -->

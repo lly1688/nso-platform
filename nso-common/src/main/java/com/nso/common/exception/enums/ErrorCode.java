@@ -2,11 +2,13 @@ package com.nso.common.exception.enums;
 
 public enum ErrorCode {
 
-    SUCCESS(200, "success"),
+    SUCCESS(0, "success"),
     BUSINESS_ERROR(400, "business error"),
     UNAUTHORIZED(401, "unauthorized"),
     FORBIDDEN(403, "forbidden"),
     NOT_FOUND(404, "not found"),
+    LOGIN_LOCKED(423, "login locked"),
+    RATE_LIMITED(429, "rate limited"),
     SYSTEM_ERROR(500, "system error");
 
     private final int code;

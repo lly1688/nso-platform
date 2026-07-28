@@ -1,6 +1,52 @@
 spring:
+  datasource:
+    url: ${NSO_DATASOURCE_URL:jdbc:mysql://127.0.0.1:3307/nso_platform?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false}
+    username: ${NSO_DATASOURCE_USERNAME:nso_app}
+    password: ${NSO_DATASOURCE_PASSWORD:nso_app_change_me}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: nso-dev-hikari
+      minimum-idle: 2
+      maximum-pool-size: 10
+      connection-timeout: 10000
+  data:
+    redis:
+      host: ${NSO_REDIS_HOST:127.0.0.1}
+      port: ${NSO_REDIS_PORT:6380}
+      database: ${NSO_REDIS_DATABASE:0}
+      # Compose development Redis intentionally has no password. Do not bind an
+      # empty password here: Redisson treats it as credentials and sends AUTH.
+      # For a password-protected developer Redis, set SPRING_DATA_REDIS_PASSWORD
+      # in the IDE/run environment instead.
+      timeout: 3s
+      lettuce:
+        pool:
+          min-idle: 1
+          max-idle: 8
+          max-active: 8
+          max-wait: 2s
   flyway:
-    enabled: ${NSO_FLYWAY_ENABLED:false}
+    enabled: ${NSO_FLYWAY_ENABLED:true}
 
 knife4j:
   enable: true
+
+logging:
+  level:
+    root: info
+    com.nso: debug
+
+nso:
+  security:
+    # This value is development-only. Production refuses to use a default secret.
+    secret: ${NSO_JWT_SECRET:dev-only-change-before-production-please-2026}
+  wechat:
+    mock-enabled: ${NSO_WECHAT_MOCK_ENABLED:true}
+  minio:
+    endpoint: ${NSO_MINIO_ENDPOINT:http://127.0.0.1:9002}
+    access-key: ${NSO_MINIO_ACCESS_KEY:nso_minio}
+    secret-key: ${NSO_MINIO_SECRET_KEY:nso_minio_change_me}
+  bootstrap:
+    enabled: ${NSO_BOOTSTRAP_ENABLED:true}
+    admin-username: ${NSO_BOOTSTRAP_ADMIN_USERNAME:admin}
+    admin-password: ${NSO_BOOTSTRAP_ADMIN_PASSWORD:admin123}

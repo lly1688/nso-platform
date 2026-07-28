@@ -78,16 +78,47 @@ nso-admin  ──→ nso-framework、nso-system、nso-quartz、nso-generator
 copy .env.example .env
 ```
 
-启动 MySQL、Redis、MinIO：
+启动 MySQL、Redis、MinIO（首次启动会自动创建 `nso-files` bucket）：
 
 ```bash
-docker compose up -d
+docker compose up -d mysql redis minio minio-init
+docker compose ps
 ```
 
-## 后端验证
+默认开发环境连接上述 Compose 服务，Flyway 会在应用启动时从空库依次执行
+`V1` 至最新版本的迁移。启动前请确认 Docker Desktop 已运行，并按需在 `.env`
+替换示例密码；生产环境不得使用 `.env.example` 中的默认值。
+
+## 启动后端
+
+```bash
+mvn -pl nso-admin -am spring-boot:run
+```
+
+开发首个管理员由 `application-dev.yml` 的 `nso.bootstrap` 控制。只允许在开发
+环境使用该入口；启动后应立即修改默认密码。微信登录的 `dev:<用户名>` 模拟码同样
+只在 `application-dev.yml` 明确开启时可用。
+
+## 本地演示账号
+
+演示账号默认关闭，且仓库不提供任何密码。仅在本地或测试环境同时设置下列环境变量
+（密码至少 8 位）后，应用启动时才会幂等创建账号；同名账号不会被重置密码或角色：
+
+```bash
+NSO_DEMO_ENABLED=true
+NSO_DEMO_DEFAULT_PASSWORD=请使用本地测试密码
+```
+
+创建的账号为 `demo-admin`、`demo-pm`、`demo-tech`、`demo-process`、
+`demo-purchase`、`demo-production`、`demo-quality`、`demo-customer`、
+`demo-executive`，分别对应系统管理员、项目经理、技术、工艺、采购、生产、质量、
+客户确认和管理层角色。生产环境应保持 `NSO_DEMO_ENABLED=false`。
+
+## 验证
 
 ```bash
 mvn clean test
+docker compose config
 ```
 
 ## PC 管理端验证
@@ -97,3 +128,5 @@ cd nso-ui
 npm install
 npm run build
 ```
+
+更多服务启动、迁移复位边界和故障定位见 [deploy/README.md](deploy/README.md)。
