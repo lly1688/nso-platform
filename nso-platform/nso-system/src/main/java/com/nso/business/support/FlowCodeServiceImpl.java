@@ -19,7 +19,7 @@ import com.nso.business.risk.domain.Risk;
 import com.nso.business.risk.mapper.RiskMapper;
 import com.nso.business.task.domain.Task;
 import com.nso.business.task.mapper.TaskMapper;
-import com.nso.common.exception.BusinessException;
+import com.nso.shared.exception.BusinessException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -29,20 +29,34 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+
+// 流转二维码 服务层处理
 public class FlowCodeServiceImpl implements IFlowCodeService {
     private static final String PROJECT_FLOW = "PROJECT_FLOW";
     private static final String DOCUMENT_VERSION = "DOCUMENT_VERSION";
 
+    // JDBC模板
     private final JdbcTemplate jdbc;
+    // 项目数据映射
     private final ProjectMapper projects;
+    // 文档版本数据映射
     private final DocumentVersionMapper documents;
+    // 任务数据映射
     private final TaskMapper tasks;
+    // 风险数据映射
     private final RiskMapper risks;
+    // 变更服务
     private final IChangeService changes;
+    // 项目数据范围
     private final ProjectDataScope dataScope;
 
-    public FlowCodeServiceImpl(JdbcTemplate jdbc, ProjectMapper projects, DocumentVersionMapper documents,
-                               TaskMapper tasks, RiskMapper risks, IChangeService changes, ProjectDataScope dataScope) {
+    public FlowCodeServiceImpl(JdbcTemplate jdbc,
+                                ProjectMapper projects,
+                                DocumentVersionMapper documents,
+                                TaskMapper tasks,
+                                RiskMapper risks,
+                                IChangeService changes,
+                                ProjectDataScope dataScope) {
         this.jdbc = jdbc;
         this.projects = projects;
         this.documents = documents;
@@ -52,6 +66,7 @@ public class FlowCodeServiceImpl implements IFlowCodeService {
         this.dataScope = dataScope;
     }
 
+    // 确保项目流转码存在。
     @Override
     @Transactional
     public QrCodeBindingDto ensureProjectFlowCode(Long projectId) {
@@ -59,6 +74,7 @@ public class FlowCodeServiceImpl implements IFlowCodeService {
         return ensure(PROJECT_FLOW, projectId);
     }
 
+    // 确保文档版本流转码存在。
     @Override
     @Transactional
     public QrCodeBindingDto ensureDocumentVersionCode(Long documentVersionId) {
@@ -70,17 +86,22 @@ public class FlowCodeServiceImpl implements IFlowCodeService {
         return ensure(DOCUMENT_VERSION, documentVersionId);
     }
 
+    // 查询项目流转码。
     @Override
     public QrCodeBindingDto findProjectFlowCode(Long projectId) {
         requireProject(projectId);
         return find(PROJECT_FLOW, projectId);
     }
 
+    // 解析扫码内容并校验权限。
     @Override
     public ScanDetailDto resolveScan(String rawCode, List<String> permissions) {
         String code = normalize(rawCode);
         Binding binding = jdbc.query("SELECT qr_code,business_type,business_id,status FROM nso_qrcode_binding WHERE tenant_id=? AND qr_code=?",
-            (rs, row) -> new Binding(rs.getString("qr_code"), rs.getString("business_type"), rs.getLong("business_id"), rs.getString("status")),
+            (rs, row) -> new Binding(rs.getString("qr_code"),
+                    rs.getString("business_type"),
+                    rs.getLong("business_id"),
+                    rs.getString("status")),
             TenantContext.tenantId(), code).stream().findFirst().orElseThrow(() -> new BusinessException("未找到对应的现场流转二维码"));
         if (!"ACTIVE".equals(binding.status())) throw new BusinessException("该现场流转二维码已失效");
 
@@ -109,17 +130,33 @@ public class FlowCodeServiceImpl implements IFlowCodeService {
                 .orderByDesc(Risk::getCalculatedAt))
             .stream().map(row -> toRiskDto(row, project.getProjectNo())).toList() : List.of();
         List<ChangeOrderDto> changeRows = hasPermission(permissions, "change:view") ? changes.list(projectId).list() : List.of();
+
         if (DOCUMENT_VERSION.equals(binding.businessType()) && documentRows.isEmpty()) {
-            return new ScanDetailDto(binding.businessType(), project.getProjectNo(), toProjectDto(project), documentRows, taskRows, riskRows, changeRows);
+            return new ScanDetailDto(binding.businessType(),
+                    project.getProjectNo(),
+                    toProjectDto(project),
+                    documentRows,
+                    taskRows,
+                    riskRows,
+                    changeRows);
         }
         String title = PROJECT_FLOW.equals(binding.businessType()) ? project.getProjectNo() + " 现场流转" : documentRows.get(0).fileName();
-        return new ScanDetailDto(binding.businessType(), title, toProjectDto(project), documentRows, taskRows, riskRows, changeRows);
+        return new ScanDetailDto(binding.businessType(),
+                title,
+                toProjectDto(project),
+                documentRows,
+                taskRows,
+                riskRows,
+                changeRows);
     }
 
     private QrCodeBindingDto ensure(String businessType, Long businessId) {
         QrCodeBindingDto existing = find(businessType, businessId);
+
         if (existing != null && "ACTIVE".equals(existing.status())) return existing;
+
         String code = "NSO-" + UUID.randomUUID().toString().replace("-", "").substring(0, 20).toUpperCase();
+
         if (existing != null) {
             jdbc.update("UPDATE nso_qrcode_binding SET qr_code=?,target_url=?,status='ACTIVE',updated_at=CURRENT_TIMESTAMP WHERE tenant_id=? AND business_type=? AND business_id=?",
                 code, payload(code), TenantContext.tenantId(), businessType, businessId);
@@ -150,7 +187,9 @@ public class FlowCodeServiceImpl implements IFlowCodeService {
         return document;
     }
 
-    private Long documentProjectId(Long documentVersionId) { return requireDocument(documentVersionId).getProjectId(); }
+    private Long documentProjectId(Long documentVersionId) {
+        return requireDocument(documentVersionId).getProjectId();
+    }
     private String normalize(String value) {
         if (value == null || value.isBlank()) throw new BusinessException("二维码内容不能为空");
         String trimmed = value.trim();
@@ -158,7 +197,9 @@ public class FlowCodeServiceImpl implements IFlowCodeService {
         if (trimmed.startsWith("NSO:")) return trimmed.substring(4);
         return trimmed;
     }
-    private String payload(String code) { return "nso://scan/" + code; }
+    private String payload(String code) {
+        return "nso://scan/" + code;
+    }
 
     private boolean hasPermission(List<String> permissions, String authority) {
         return permissions != null && permissions.contains(authority);
@@ -166,26 +207,72 @@ public class FlowCodeServiceImpl implements IFlowCodeService {
 
     private ProjectDto toProjectDto(Project row) {
         long daysLeft = row.getTargetDate() == null ? 0 : ChronoUnit.DAYS.between(LocalDate.now(), row.getTargetDate());
-        return new ProjectDto(row.getId(), row.getProjectNo(), row.getCustomerId(), row.getCustomerName(), row.getProductName(), row.getQuantity(),
-            row.getTargetDate(), row.getOwnerName(), row.getStatus(), row.getStage(), row.getPriority(), row.getRiskLevel(), row.getSampleStatus(), 0, daysLeft);
+        return new ProjectDto(row.getId(),
+                row.getProjectNo(),
+                row.getCustomerId(),
+                row.getCustomerName(),
+                row.getProductName(),
+                row.getQuantity(),
+                row.getTargetDate(),
+                row.getOwnerName(),
+                row.getStatus(),
+                row.getStage(),
+                row.getPriority(),
+                row.getRiskLevel(),
+                row.getSampleStatus(), 0, daysLeft,
+                row.getVersion(),
+                row.getOwnerUserId());
     }
 
     private DocumentVersionDto toDocumentDto(DocumentVersion row, String projectNo) {
-        return new DocumentVersionDto(row.getId(), row.getProjectId(), row.getFileObjectId(), projectNo, row.getFileName(), row.getFileType(),
-            row.getVersionNo(), row.getStatus(), row.getEffectiveDate(), row.getChangeSummary(), row.getCurrentVersion() != null && row.getCurrentVersion() == 1,
-            row.getSha256(), "/api/v1/mp/documents/" + row.getId());
+        return new DocumentVersionDto(
+                row.getId(),
+                row.getProjectId(),
+                row.getFileObjectId(),
+                projectNo,
+                row.getFileName(),
+                row.getFileType(),
+            row.getVersionNo(),
+                row.getStatus(),
+                row.getEffectiveDate(),
+                row.getChangeSummary(),
+                row.getCurrentVersion() != null && row.getCurrentVersion() == 1,
+            row.getSha256(), "/api/v1/admin/documents/" + row.getId());
     }
 
     private TaskDto toTaskDto(Task row, String projectNo) {
-        return new TaskDto(row.getId(), row.getProjectId(), projectNo, row.getTaskNo(), row.getTaskType(), row.getTitle(), row.getReferencedVersion(),
-            row.getStatus(), row.getResponsibleName(), row.getPlanStart(), row.getPlanFinish(), row.getBlockReason(), row.getVersion());
+        return new TaskDto(
+                row.getId(),
+                row.getProjectId(),
+                projectNo,
+                row.getTaskNo(),
+                row.getTaskType(),
+                row.getTitle(),
+                row.getReferencedVersion(),
+            row.getStatus(),
+                row.getResponsibleName(),
+                row.getPlanStart(),
+                row.getPlanFinish(),
+                row.getBlockReason(),
+                row.getVersion(),
+                row.getAssigneeId());
     }
 
     private RiskDto toRiskDto(Risk row, String projectNo) {
         String raw = row.getReasons();
         List<String> reasons = raw == null || raw.length() < 2 ? List.of() : List.of(raw.substring(1, raw.length() - 1).replace("\"", "").split(","));
-        return new RiskDto(row.getId(), row.getProjectId(), projectNo, row.getLevel(), row.getScore(), reasons, row.getSuggestion(), row.getStatus());
+        return new RiskDto(row.getId(),
+                row.getProjectId(),
+                projectNo,
+                row.getLevel(),
+                row.getScore(),
+                reasons,
+                row.getSuggestion(),
+                row.getStatus());
     }
 
-    private record Binding(String code, String businessType, Long businessId, String status) { }
+    // 流转码绑定数据。
+    private record Binding(String code, String businessType, Long businessId, String status) {
+
+    }
 }

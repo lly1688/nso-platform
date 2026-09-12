@@ -26,7 +26,7 @@ services:
       retries: 10
 
   redis:
-    # Use an immutable version tag.  Do not replace this with `latest` or a major-only tag.
+    # 使用不可变版本标签。请勿改为 `latest` 或仅主版本号的标签。
     image: ${NSO_REDIS_IMAGE:-redis:8.6.1-alpine}
     container_name: nso-redis
     restart: unless-stopped

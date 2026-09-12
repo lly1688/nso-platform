@@ -1,9 +1,12 @@
+# 生产环境配置
+# 数据源配置
 spring:
   datasource:
     url: ${NSO_DATASOURCE_URL}
     username: ${NSO_DATASOURCE_USERNAME}
     password: ${NSO_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  # Redis配置
   data:
     redis:
       host: ${NSO_REDIS_HOST}
@@ -11,23 +14,30 @@ spring:
       database: ${NSO_REDIS_DATABASE:0}
       password: ${NSO_REDIS_PASSWORD}
       timeout: 3s
+  # Flyway数据库迁移
   flyway:
     enabled: ${NSO_FLYWAY_ENABLED:true}
 
+# Knife4j API文档（生产环境关闭）
 knife4j:
   enable: false
 
+# SpringDoc API文档（生产环境关闭）
+springdoc:
+  api-docs:
+    enabled: false
+
+# 日志配置
 logging:
   level:
     com.nso: info
 
+# NSO平台自定义配置
 nso:
+  # 安全配置
   security:
     secret: ${NSO_JWT_SECRET}
-  wechat:
-    mock-enabled: false
-    app-id: ${NSO_WECHAT_APP_ID}
-    app-secret: ${NSO_WECHAT_APP_SECRET}
+  # MinIO对象存储配置
   minio:
     endpoint: ${NSO_MINIO_ENDPOINT}
     access-key: ${NSO_MINIO_ACCESS_KEY}

@@ -1,0 +1,32 @@
+/* 样品页面布局。 */
+.sample-submit-blocker {
+    align-items: flex-start;
+}
+
+.sample-submit-blocker__details {
+    display: grid;
+    gap: 5px;
+    color: var(--nso-danger-dark);
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.sample-submit-blocker__details span {
+    display: block;
+}
+
+.sample-submit-blocker__details b {
+    display: inline-block;
+    min-width: 62px;
+    color: var(--nso-danger-dark);
+    font-weight: 700;
+}
+
+.sample-submit-blocker__reason {
+    color: var(--nso-danger-dark);
+}
+
+.sample-submit-blocker__details .el-button {
+    justify-self: start;
+    margin-left: 62px;
+}

@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-09-11T18:24:40.1049152Z",
+  "gitCommit": "ae75cfa7aa04e4d4783883c8fcaa8895988cedfc",
+  "branch": "codex/security-review-fix",
+  "migrationCount": 39,
+  "migrationVersion": 39,
+  "frontendBuild": "npm run build is required by verify-pilot.ps1",
+  "backendTests": "mvn test is required by verify-pilot.ps1",
+  "healthz": null,
+  "knownLimitations": [
+    "浏览器端到端验收需在真实试点环境执行",
+    "镜像漏洞扫描需接入运营方扫描器"
+  ]
+}

@@ -1,12 +1,18 @@
+# 测试环境配置
 spring:
+  # Flyway数据库迁移（测试环境启用）
   flyway:
     enabled: true
+  # Quartz定时任务（测试环境关闭自动启动）
   quartz:
     auto-startup: false
 
+# NSO平台自定义配置
 nso:
+  # 安全配置
   security:
     issuer: nso-platform-test
     secret: test-only-signing-secret-that-is-never-used-outside-tests
+  # 启动引导配置（测试环境关闭）
   bootstrap:
     enabled: false

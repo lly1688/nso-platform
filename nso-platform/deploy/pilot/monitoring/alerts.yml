@@ -1,0 +1,60 @@
+groups:
+  - name: nso-pilot
+    rules:
+      - alert: NsoTlsExpiring
+        expr: nso_tls_not_after_seconds - time() < 30 * 86400
+        for: 5m
+        labels:
+          severity: critical
+          owner: pilot-operations
+        annotations:
+          summary: "NSO TLS certificate expires within 30 days"
+          description: "Renew tls.crt/tls.key, validate nginx -t, reload gateway; escalate to infrastructure owner if unresolved within 4 hours."
+      - alert: NsoTlsCheckMissing
+        expr: absent(nso_tls_check_timestamp_seconds) or time() - nso_tls_check_timestamp_seconds > 90000
+        for: 15m
+        labels:
+          severity: warning
+          owner: pilot-operations
+        annotations:
+          summary: "NSO daily TLS certificate check is missing or stale"
+          description: "Inspect the daily check-tls.ps1 job and node exporter textfile collector. Escalate to infrastructure owner within 4 hours."
+      - alert: NsoAuditWriteFailure
+        expr: increase(nso_audit_write_failures_total[15m]) > 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "NSO audit persistence failed"
+
+      - alert: NsoSchedulerTaskFailure
+        expr: increase(nso_scheduler_task_failures_total[30m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "NSO scheduler task failed"
+
+      - alert: NsoMessageBacklogHigh
+        expr: nso_message_backlog > 100
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "NSO unread message backlog exceeds the pilot threshold"
+
+      - alert: NsoMySqlSlowQueries
+        expr: increase(mysql_global_status_slow_queries[15m]) > 20
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "MySQL slow query volume is elevated"
+
+      - alert: NsoBackupExpired
+        expr: nso_backup_age_hours > 24
+        for: 30m
+        labels:
+          severity: critical
+        annotations:
+          summary: "NSO backup is older than the 24 hour RPO"

@@ -1,52 +1,92 @@
+# 开发环境配置
+# 服务器端口：与烟草体积测量平台前端（8080）错开，改用 8081
+server:
+  port: ${SERVER_PORT:8081}
+
+# 监控端点端口：避开主服务端口 8081，改用 18081
+management:
+  server:
+    port: ${MANAGEMENT_SERVER_PORT:18081}
+
 spring:
+  # 数据源配置
   datasource:
     url: ${NSO_DATASOURCE_URL:jdbc:mysql://127.0.0.1:3307/nso_platform?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false}
     username: ${NSO_DATASOURCE_USERNAME:nso_app}
     password: ${NSO_DATASOURCE_PASSWORD:nso_app_change_me}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    # HikariCP连接池配置
     hikari:
       pool-name: nso-dev-hikari
+      # 最小空闲连接数
       minimum-idle: 2
+      # 最大连接池大小
       maximum-pool-size: 10
+      # 连接超时时间（毫秒）
       connection-timeout: 10000
+  # Redis配置
   data:
     redis:
       host: ${NSO_REDIS_HOST:127.0.0.1}
       port: ${NSO_REDIS_PORT:6380}
       database: ${NSO_REDIS_DATABASE:0}
-      # Compose development Redis intentionally has no password. Do not bind an
-      # empty password here: Redisson treats it as credentials and sends AUTH.
-      # For a password-protected developer Redis, set SPRING_DATA_REDIS_PASSWORD
-      # in the IDE/run environment instead.
+      # 编排环境中的开发 Redis 未设置密码。不要在这里绑定空密码：
+      # 客户端会将其视为凭据并发送认证命令。
+      # 若开发 Redis 设置了密码，请在开发工具或运行环境中配置
+      # SPRING_DATA_REDIS_PASSWORD。
       timeout: 3s
       lettuce:
         pool:
+          # 最小空闲连接
           min-idle: 1
+          # 最大空闲连接
           max-idle: 8
+          # 最大活跃连接
           max-active: 8
+          # 连接池最大等待时间
           max-wait: 2s
+  # Flyway数据库迁移
   flyway:
     enabled: ${NSO_FLYWAY_ENABLED:true}
 
+# Knife4j API文档（开发环境启用）
 knife4j:
   enable: true
 
+# SpringDoc API文档（开发环境启用）
+springdoc:
+  api-docs:
+    enabled: true
+
+# 日志配置
 logging:
   level:
     root: info
+    # NSO平台包路径日志级别
     com.nso: debug
 
+# NSO平台自定义配置
 nso:
+  # API文档开关
+  api-docs:
+    enabled: ${NSO_API_DOCS_ENABLED:true}
+  # 安全配置
   security:
-    # This value is development-only. Production refuses to use a default secret.
+    # 此值仅用于开发环境。生产环境拒绝使用默认密钥。
     secret: ${NSO_JWT_SECRET:dev-only-change-before-production-please-2026}
-  wechat:
-    mock-enabled: ${NSO_WECHAT_MOCK_ENABLED:true}
+  # MinIO对象存储配置
   minio:
+    # MinIO服务端点
     endpoint: ${NSO_MINIO_ENDPOINT:http://127.0.0.1:9002}
+    # 访问密钥
     access-key: ${NSO_MINIO_ACCESS_KEY:nso_minio}
+    # 密钥
     secret-key: ${NSO_MINIO_SECRET_KEY:nso_minio_change_me}
+  # 启动引导配置
   bootstrap:
+    # 是否启用启动引导（创建初始管理员账号）
     enabled: ${NSO_BOOTSTRAP_ENABLED:true}
+    # 初始管理员用户名
     admin-username: ${NSO_BOOTSTRAP_ADMIN_USERNAME:admin}
+    # 初始管理员密码
     admin-password: ${NSO_BOOTSTRAP_ADMIN_PASSWORD:admin123}

@@ -30,14 +30,14 @@
         </dependency>
         <dependency>
             <groupId>com.nso</groupId>
-            <artifactId>nso-quartz</artifactId>
+            <artifactId>nso-scheduler</artifactId>
         </dependency>
         <dependency>
             <groupId>com.nso</groupId>
-            <artifactId>nso-generator</artifactId>
+            <artifactId>nso-scaffold</artifactId>
         </dependency>
 
-        <!-- Spring Boot启动与接口层 -->
+        <!-- 启动与接口层 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -54,8 +54,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
 
-        <!-- Flyway -->
+        <!-- 数据库版本迁移 -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
@@ -65,21 +69,21 @@
             <artifactId>flyway-mysql</artifactId>
         </dependency>
 
-        <!-- MySQL -->
+        <!-- 数据库驱动 -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Lombok -->
+        <!-- 代码简化工具 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- DevTools -->
+        <!-- 开发辅助工具 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>

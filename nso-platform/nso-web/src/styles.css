@@ -1,0 +1,16 @@
+/* 全局样式入口。 */
+@import './styles/00-foundation.css';
+@import './styles/01-shell.css';
+@import './styles/02-shared.css';
+
+@import './styles/pages/dashboard.css';
+@import './styles/pages/project.css';
+@import './styles/pages/public-confirm.css';
+@import './styles/pages/login.css';
+@import './styles/pages/profile.css';
+@import './styles/pages/document.css';
+@import './styles/pages/sample.css';
+@import './styles/pages/system.css';
+@import './styles/pages/task.css';
+
+@import './styles/03-responsive.css';

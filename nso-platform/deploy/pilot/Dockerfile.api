@@ -1,0 +1,32 @@
+FROM maven:3.9.9-eclipse-temurin-17@sha256:f58d59b6273e785ac0a4477f6e9b5ba1d7731c75b906c0f7b34076f1851318cc AS build
+
+WORKDIR /workspace
+
+COPY pom.xml ./
+COPY nso-shared/pom.xml nso-shared/pom.xml
+COPY nso-system/pom.xml nso-system/pom.xml
+COPY nso-framework/pom.xml nso-framework/pom.xml
+COPY nso-scheduler/pom.xml nso-scheduler/pom.xml
+COPY nso-scaffold/pom.xml nso-scaffold/pom.xml
+COPY nso-admin/pom.xml nso-admin/pom.xml
+RUN mvn -B -pl nso-admin -am dependency:go-offline
+
+COPY . ./
+RUN mvn -B -pl nso-admin -am -DskipTests package
+
+FROM eclipse-temurin:17-jre@sha256:c6f2875c05ea10f16398bdc5f73405c384991506f2f1ead8bcc6582ae8adea79
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --system nso \
+    && useradd --system --gid nso --create-home --home-dir /app nso
+
+WORKDIR /app
+COPY --from=build /workspace/nso-admin/target/nso-admin-*.jar /app/nso-admin.jar
+RUN chown -R nso:nso /app
+
+USER nso
+EXPOSE 8080 8081
+
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "-Djava.security.egd=file:/dev/urandom", "-jar", "/app/nso-admin.jar"]

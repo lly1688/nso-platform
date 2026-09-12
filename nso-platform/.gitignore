@@ -23,6 +23,9 @@ unpackage/
 # Local env
 .env
 *.local
+deploy/pilot/.env.pilot
+deploy/pilot/certs/
+deploy/pilot/backups/
 
 # Runtime files
 logs/

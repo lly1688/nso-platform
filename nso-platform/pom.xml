@@ -22,6 +22,7 @@
 
     <properties>
         <java.version>17</java.version>
+        <maven.compiler.parameters>true</maven.compiler.parameters>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <mybatis-plus.version>3.5.10</mybatis-plus.version>
@@ -34,11 +35,11 @@
     </properties>
 
     <modules>
-        <module>nso-common</module>
+        <module>nso-shared</module>
         <module>nso-system</module>
         <module>nso-framework</module>
-        <module>nso-quartz</module>
-        <module>nso-generator</module>
+        <module>nso-scheduler</module>
+        <module>nso-scaffold</module>
         <module>nso-admin</module>
     </modules>
 
@@ -47,7 +48,7 @@
             <!-- ===== 内部模块 ===== -->
             <dependency>
                 <groupId>com.nso</groupId>
-                <artifactId>nso-common</artifactId>
+                <artifactId>nso-shared</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -62,12 +63,12 @@
             </dependency>
             <dependency>
                 <groupId>com.nso</groupId>
-                <artifactId>nso-quartz</artifactId>
+                <artifactId>nso-scheduler</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.nso</groupId>
-                <artifactId>nso-generator</artifactId>
+                <artifactId>nso-scaffold</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -77,21 +78,21 @@
             </dependency>
 
             <!-- ===== 第三方依赖 ===== -->
-            <!-- MyBatis-Plus -->
+            <!-- 持久层增强框架 -->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
-            <!-- Redisson 分布式锁/缓存 -->
+            <!-- 分布式锁与缓存 -->
             <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
                 <version>${redisson.version}</version>
             </dependency>
 
-            <!-- MinIO 对象存储 -->
+            <!-- 对象存储 -->
             <dependency>
                 <groupId>io.minio</groupId>
                 <artifactId>minio</artifactId>
@@ -104,21 +105,21 @@
                 <version>${java-jwt.version}</version>
             </dependency>
 
-            <!-- Knife4j API文档 -->
+            <!-- 接口文档工具 -->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
             </dependency>
 
-            <!-- Hutool 工具集 -->
+            <!-- 通用工具集 -->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
 
-            <!-- EasyExcel -->
+            <!-- 表格处理工具 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>easyexcel</artifactId>
@@ -126,5 +127,17 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <parameters>true</parameters>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

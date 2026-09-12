@@ -1,6 +1,6 @@
 package com.nso.framework.web.filter;
 
-import com.nso.common.core.domain.AjaxResult;
+import com.nso.shared.core.domain.AjaxResult;
 import com.nso.framework.config.NsoSecurityProperties;
 import com.nso.framework.security.NsoPrincipal;
 import com.nso.framework.security.RequestRateLimitService;
@@ -19,24 +19,33 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
+// 请求频率限制过滤器。
 @Component
 public class RequestRateLimitFilter extends OncePerRequestFilter {
+
+    // 请求速率限流服务
     private final RequestRateLimitService rateLimitService;
+    // NSO安全配置
     private final NsoSecurityProperties properties;
+    // 对象数据映射
     private final ObjectMapper objectMapper;
 
-    public RequestRateLimitFilter(RequestRateLimitService rateLimitService, NsoSecurityProperties properties,
+    public RequestRateLimitFilter(RequestRateLimitService rateLimitService,
+                                  NsoSecurityProperties properties,
                                   ObjectMapper objectMapper) {
         this.rateLimitService = rateLimitService;
         this.properties = properties;
         this.objectMapper = objectMapper;
     }
 
+    // 按接口场景执行分钟级限流。
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain) throws ServletException, IOException {
         Policy policy = policy(request);
-        if (policy != null && !rateLimitService.tryAcquire(policy.scope(), identity(request), policy.limit(), Duration.ofMinutes(1))) {
+        if (policy != null && !rateLimitService.tryAcquire(
+                policy.scope(), identity(request), policy.limit(), Duration.ofMinutes(1))) {
             response.setStatus(429);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -49,7 +58,8 @@ public class RequestRateLimitFilter extends OncePerRequestFilter {
 
     private Policy policy(HttpServletRequest request) {
         String path = request.getRequestURI();
-        if ("POST".equals(request.getMethod()) && (path.endsWith("/auth/login") || path.endsWith("/auth/wechat-login") || path.endsWith("/auth/refresh"))) {
+        if ("POST".equals(request.getMethod())
+                && path.endsWith("/auth/refresh")) {
             return new Policy("auth", properties.getAuthRateLimitPerMinute());
         }
         if ("GET".equals(request.getMethod()) && ((path.contains("/files/") && path.endsWith("/download"))
@@ -67,5 +77,7 @@ public class RequestRateLimitFilter extends OncePerRequestFilter {
         return request.getRemoteAddr();
     }
 
-    private record Policy(String scope, int limit) { }
+    // 限流策略。
+    private record Policy(String scope, int limit) {
+    }
 }

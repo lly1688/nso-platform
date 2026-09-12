@@ -6,8 +6,38 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
 import lombok.Data;
 
-@Data @TableName("nso_process_route")
+// 工艺路线实体。
+@Data
+@TableName("nso_process_route")
 public class ProcessRoute {
-    @TableId private Long id; private Long tenantId; private Long projectId; private String routeNo; private String versionNo;
-    private Long boundDocVersionId; private String status; @Version private Integer version; @TableLogic private Integer deleted;
+
+    // 工艺路线编号
+    @TableId
+    private Long id;
+
+    // 租户编号
+    private Long tenantId;
+
+    // 项目编号
+    private Long projectId;
+
+    // 路线单号
+    private String routeNo;
+
+    // 版本号
+    private String versionNo;
+
+    // 绑定文档版本编号
+    private Long boundDocVersionId;
+
+    // 发布状态
+    private String status;
+
+    // 数据版本
+    @Version
+    private Integer version;
+
+    // 删除标志
+    @TableLogic
+    private Integer deleted;
 }

@@ -8,8 +8,19 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
+/**
+ * 菜单数据访问接口。
+ */
 @Mapper
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
+
+    /**
+     * 查询用户拥有的权限标识。
+     *
+     * @param userId 用户编号
+     * @param tenantId 租户编号
+     * @return 权限标识列表
+     */
     @Select("SELECT DISTINCT m.permission_code FROM sys_menu m " +
             "JOIN sys_role_menu rm ON rm.menu_id = m.id " +
             "JOIN sys_user_role ur ON ur.role_id = rm.role_id " +
@@ -19,6 +30,13 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
             "AND m.permission_code IS NOT NULL ORDER BY m.permission_code")
     List<String> selectPermissionCodesByUserId(@Param("userId") Long userId, @Param("tenantId") Long tenantId);
 
+    /**
+     * 查询用户可访问的菜单路由。
+     *
+     * @param userId 用户编号
+     * @param tenantId 租户编号
+     * @return 菜单路由列表
+     */
     @Select("SELECT DISTINCT m.route_path FROM sys_menu m " +
             "JOIN sys_role_menu rm ON rm.menu_id = m.id " +
             "JOIN sys_user_role ur ON ur.role_id = rm.role_id " +

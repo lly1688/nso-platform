@@ -3,16 +3,19 @@ package com.nso.system.profile;
 import com.nso.business.file.ObjectStoragePort;
 import com.nso.business.file.domain.FileObject;
 import com.nso.business.file.mapper.FileObjectMapper;
-import com.nso.common.exception.BusinessException;
+import com.nso.business.file.service.FileDownloadPayload;
+import com.nso.business.file.service.FileUploadPayload;
+import com.nso.shared.exception.BusinessException;
+import com.nso.shared.util.FileContentSignature;
 import com.nso.system.domain.SysDept;
 import com.nso.system.domain.SysUser;
 import com.nso.system.mapper.SysDeptMapper;
 import com.nso.system.mapper.SysUserMapper;
 import com.nso.system.service.ISysUserService;
-import org.springframework.core.io.InputStreamResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.List;
@@ -23,7 +26,10 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Service
+
+// 用户个人信息 服务层处理
 public class UserProfileServiceImpl implements IUserProfileService {
+    private static final Logger log = LoggerFactory.getLogger(UserProfileServiceImpl.class);
     private static final long MAX_AVATAR_SIZE = 2L * 1024 * 1024;
     private static final Set<String> AVATAR_EXTENSIONS = Set.of("png", "jpg", "jpeg", "webp");
     private static final Map<String, Set<String>> AVATAR_CONTENT_TYPES = Map.of(
@@ -35,14 +41,22 @@ public class UserProfileServiceImpl implements IUserProfileService {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
     private static final Set<String> GENDERS = Set.of("MALE", "FEMALE", "UNSPECIFIED");
 
+    // 系统用户服务
     private final ISysUserService users;
+    // 系统用户数据映射
     private final SysUserMapper userMapper;
+    // 系统部门数据映射
     private final SysDeptMapper departments;
+    // 文件对象数据映射
     private final FileObjectMapper files;
+    // 对象存储端口
     private final ObjectStoragePort storage;
 
-    public UserProfileServiceImpl(ISysUserService users, SysUserMapper userMapper, SysDeptMapper departments,
-                                  FileObjectMapper files, ObjectStoragePort storage) {
+    public UserProfileServiceImpl(ISysUserService users,
+                                    SysUserMapper userMapper,
+                                    SysDeptMapper departments,
+                                    FileObjectMapper files,
+                                    ObjectStoragePort storage) {
         this.users = users;
         this.userMapper = userMapper;
         this.departments = departments;
@@ -50,11 +64,13 @@ public class UserProfileServiceImpl implements IUserProfileService {
         this.storage = storage;
     }
 
+    // 查询当前用户资料。
     @Override
     public ProfileView current(Long userId, Long tenantId) {
         return toView(requireUser(userId, tenantId));
     }
 
+    // 更新当前用户资料。
     @Override
     @Transactional
     public ProfileView update(Long userId, Long tenantId, UpdateProfileRequest request) {
@@ -83,31 +99,33 @@ public class UserProfileServiceImpl implements IUserProfileService {
         return current(userId, tenantId);
     }
 
+    // 上传当前用户头像。
     @Override
     @Transactional
-    public ProfileView uploadAvatar(Long userId, Long tenantId, MultipartFile file) {
-        if (file == null || file.isEmpty()) {
+    public ProfileView uploadAvatar(Long userId, Long tenantId, FileUploadPayload file) {
+        if (file == null || file.inputStream() == null || file.size() <= 0) {
             throw new BusinessException("头像文件不能为空");
         }
-        if (file.getSize() > MAX_AVATAR_SIZE) {
+        if (file.size() > MAX_AVATAR_SIZE) {
             throw new BusinessException("头像文件不能超过 2MB");
         }
-        String name = safeName(file.getOriginalFilename());
+        String name = safeName(file.originalFilename());
         String extension = extension(name);
-        String contentType = normalizeContentType(file.getContentType());
+        String contentType = normalizeContentType(file.contentType());
         if (!AVATAR_EXTENSIONS.contains(extension) || !AVATAR_CONTENT_TYPES.get(extension).contains(contentType)) {
-            throw new BusinessException("头像仅支持 JPEG、PNG 或 WebP 图片");
+            throw new BusinessException("头像仅支持 JPEG、PNG 和 WebP 图片");
         }
-        try (InputStream input = file.getInputStream()) {
-            ObjectStoragePort.StoredObject stored = storage.put(
+        ObjectStoragePort.StoredObject stored = null;
+        try (InputStream rawInput = file.inputStream(); InputStream input = FileContentSignature.verify(extension, rawInput)) {
+            stored = storage.put(
                     tenantId + "/profiles/" + userId + "/" + UUID.randomUUID() + "/" + name,
-                    contentType, file.getSize(), input);
+                    contentType, file.size(), input);
             FileObject row = new FileObject();
             row.setTenantId(tenantId);
             row.setCreatedBy(userId);
             row.setFileName(name);
             row.setContentType(contentType);
-            row.setFileSize(file.getSize());
+            row.setFileSize(file.size());
             row.setSha256(stored.sha256());
             row.setStoragePath(stored.objectKey());
             files.insert(row);
@@ -115,13 +133,22 @@ public class UserProfileServiceImpl implements IUserProfileService {
                 throw new BusinessException("头像保存失败");
             }
             return current(userId, tenantId);
-        } catch (BusinessException exception) {
-            throw exception;
         } catch (Exception exception) {
+            if (stored != null) {
+                try {
+                    storage.delete(stored.objectKey());
+                } catch (Exception cleanupException) {
+                    log.warn("Failed to delete orphaned avatar object key={}", stored.objectKey(), cleanupException);
+                }
+            }
+            if (exception instanceof BusinessException businessException) {
+                throw businessException;
+            }
             throw new BusinessException("头像上传失败: " + exception.getMessage());
         }
     }
 
+    // 下载当前用户头像。
     @Override
     public AvatarContent avatar(Long userId, Long tenantId) {
         SysUser user = requireUser(userId, tenantId);
@@ -133,7 +160,9 @@ public class UserProfileServiceImpl implements IUserProfileService {
             throw new BusinessException("头像文件不存在");
         }
         try {
-            return new AvatarContent(new InputStreamResource(storage.get(file.getStoragePath())), file.getContentType());
+            return new AvatarContent(new FileDownloadPayload(file.getFileName(), file.getContentType(), file.getFileSize(),
+                    file.getSha256(), new com.nso.business.file.service.IntegrityCheckingInputStream(
+                    storage.get(file.getStoragePath()), file.getSha256())));
         } catch (Exception exception) {
             throw new BusinessException("头像读取失败: " + exception.getMessage());
         }
@@ -142,8 +171,8 @@ public class UserProfileServiceImpl implements IUserProfileService {
     private SysUser requireUser(Long userId, Long tenantId) {
         SysUser user = users.findById(userId).orElseThrow(() -> new BusinessException("用户不存在"));
         if (!tenantId.equals(user.getTenantId())) {
-            throw BusinessException.accessDenied("PROFILE_TENANT_SCOPE", "无权访问其他租户的个人资料",
-                    String.valueOf(userId), String.valueOf(tenantId), "切换到所属租户后重试");
+            throw BusinessException.accessDenied("PROFILE_TENANT_SCOPE", "无权访问其他租户的个人资料", String.valueOf(userId), String.valueOf(tenantId), "切换到所属租户后重试");
+
         }
         return user;
     }

@@ -1,0 +1,156 @@
+/* 个人中心页面布局。 */
+.profile-page {
+    display: grid;
+    gap: 22px;
+    max-width: 1240px;
+}
+
+.profile-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+}
+
+.profile-heading h1 {
+    margin: 3px 0 6px;
+    color: var(--nso-ink);
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+.profile-heading p {
+    margin: 0;
+    color: var(--nso-muted);
+}
+
+.eyebrow {
+    color: var(--nso-blue) !important;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: minmax(270px, .72fr) minmax(0, 1.45fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.profile-identity {
+    padding: 28px;
+}
+
+.profile-identity__avatar {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--nso-border);
+}
+
+.profile-identity__avatar .role-avatar {
+    font-size: 40px;
+}
+
+.avatar-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 0;
+    border: 0;
+    background: transparent;
+    color: var(--nso-blue);
+    cursor: pointer;
+    font-weight: 650;
+}
+
+.profile-identity__name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 22px 0;
+}
+
+.profile-identity__name h2 {
+    margin: 0;
+    color: var(--nso-ink);
+    font-size: 21px;
+}
+
+.profile-summary {
+    display: grid;
+    margin: 0;
+}
+
+.profile-summary > div {
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid var(--nso-divider);
+}
+
+.profile-summary dt {
+    color: var(--nso-muted);
+}
+
+.profile-summary dd {
+    min-width: 0;
+    margin: 0;
+    color: var(--nso-ink-soft);
+    overflow-wrap: anywhere;
+    text-align: right;
+}
+
+.profile-forms {
+    display: grid;
+    gap: 22px;
+}
+
+.profile-form {
+    max-width: 680px;
+}
+
+.profile-form__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.profile-form .el-form-item {
+    margin-bottom: 20px;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+.profile-page,
+.profile-layout,
+.profile-forms {
+    gap: 16px;
+}
+
+.profile-page {
+    max-width: 1180px;
+}
+
+.profile-identity {
+    padding: 20px;
+    border-radius: var(--nso-radius-lg);
+}
+
+.profile-heading h1 {
+    font-size: 22px;
+    font-weight: 680;
+}
+
+.profile-summary > div {
+    border-top-color: var(--nso-divider);
+}
