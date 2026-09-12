@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 88" role="img" aria-labelledby="title desc">
+  <title id="title">智慧非标协同 Industrial OS</title>
+  <desc id="desc">智慧非标协同平台横向标识</desc>
+  <g transform="translate(8 8)">
+    <rect x="1.5" y="1.5" width="69" height="69" rx="15" fill="#EEF3FF"/>
+    <rect x="1.5" y="1.5" width="69" height="69" rx="15" fill="none" stroke="#C9D6FF" stroke-width="1.5"/>
+    <path d="M16 15h11l18 21V15h11v43H45L27 36v22H16V15Z" fill="#5D87FF"/>
+    <path d="M27 15h6l17 20v11l-6-7-17-20V15Z" fill="#8DA8FF"/>
+    <circle cx="51" cy="15" r="3.2" fill="#B18435"/>
+  </g>
+  <text x="98" y="40" fill="#29343D" font-family="Segoe UI, HarmonyOS Sans SC, PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="27" font-weight="700">智慧非标协同</text>
+  <text x="99" y="64" fill="#66727D" font-family="Segoe UI, HarmonyOS Sans SC, PingFang SC, Microsoft YaHei, Arial, sans-serif" font-size="12" font-weight="500">INDUSTRIAL OS</text>
+</svg>

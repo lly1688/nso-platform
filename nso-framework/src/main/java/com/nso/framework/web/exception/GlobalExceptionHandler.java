@@ -1,8 +1,8 @@
 package com.nso.framework.web.exception;
 
 import com.nso.business.support.IAuditService;
-import com.nso.common.core.domain.AjaxResult;
-import com.nso.common.exception.BusinessException;
+import com.nso.shared.core.domain.AjaxResult;
+import com.nso.shared.exception.BusinessException;
 import com.nso.framework.security.NsoPrincipal;
 
 import jakarta.validation.ConstraintViolationException;
@@ -21,15 +21,18 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.UUID;
 
+// 全局异常响应处理器。
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // 审计服务
     private final IAuditService auditService;
 
     public GlobalExceptionHandler(IAuditService auditService) {
         this.auditService = auditService;
     }
 
+    // 转换业务异常及规则阻断详情。
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<AjaxResult<?>> handleBusinessException(BusinessException exception) {
         HttpStatus status = switch (exception.getCode()) {
@@ -47,7 +50,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(AjaxResult.error(exception.getCode(), exception.getMessage()));
     }
 
-    /** Method-security denials are raised after the filter chain, so normalize them here as well. */
+    // 转换方法级权限拒绝异常并记录安全审计。
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<AjaxResult<Void>> handleAccessDenied(AccessDeniedException exception) {
         recordAccessDenied();
@@ -70,10 +73,11 @@ public class GlobalExceptionHandler {
                     "DENIED", "权限校验拒绝", traceId == null || traceId.isBlank()
                             ? UUID.randomUUID().toString().replace("-", "") : traceId);
         } catch (RuntimeException ignored) {
-            // Never hide a security response because the audit store is temporarily unavailable.
+            // 审计存储暂时不可用时仍需返回原安全响应。
         }
     }
 
+    // 转换请求体字段校验异常。
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public AjaxResult<Void> handleValidationException(MethodArgumentNotValidException exception) {
         String message = exception.getBindingResult().getFieldErrors().stream()
@@ -83,11 +87,13 @@ public class GlobalExceptionHandler {
         return AjaxResult.error(400, message);
     }
 
+    // 转换约束校验异常。
     @ExceptionHandler(ConstraintViolationException.class)
     public AjaxResult<Void> handleConstraintViolationException(ConstraintViolationException exception) {
         return AjaxResult.error(400, exception.getMessage());
     }
 
+    // 转换未处理的系统异常。
     @ExceptionHandler(Exception.class)
     public AjaxResult<Void> handleException(Exception exception) {
         return AjaxResult.error(500, exception.getMessage());

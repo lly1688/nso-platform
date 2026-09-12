@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.nso</groupId>
-            <artifactId>nso-common</artifactId>
+            <artifactId>nso-shared</artifactId>
         </dependency>
 
         <dependency>
@@ -29,8 +29,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
 
         <dependency>

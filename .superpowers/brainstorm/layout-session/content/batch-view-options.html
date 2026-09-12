@@ -1,0 +1,35 @@
+<h2>批量项目视图：两种 C 形态</h2>
+<p class="subtitle">批量视图只负责“看项目卡在哪一段、先处理谁”，点入后仍回到 A 的单项目工作台。</p>
+
+<style>
+  .compare { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; margin-top:22px; }
+  .choice { border:1px solid #d7dde8; border-radius:14px; background:#fff; overflow:hidden; cursor:pointer; transition:.18s ease; }
+  .choice:hover { transform:translateY(-3px); border-color:#7e9cf5; box-shadow:0 12px 28px rgba(37,55,88,.13); }
+  .choice-head { display:flex; justify-content:space-between; align-items:start; padding:15px 17px 10px; }
+  .choice h3 { margin:0; color:#29343d; font-size:17px; } .choice p { margin:5px 0 0; color:#66727d; font-size:12px; }
+  .badge { width:26px; height:26px; display:grid; place-items:center; border-radius:7px; background:#eef3ff; color:#456dd9; font-weight:700; }
+  .mock { margin:0 14px 14px; padding:10px; min-height:230px; border:1px solid #e7eaf0; border-radius:9px; background:#f5f7fb; }
+  .filter { height:16px; background:#fff; border:1px solid #e7eaf0; border-radius:4px; margin-bottom:9px; }
+  .kanban { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:5px; align-items:start; }
+  .col { min-height:185px; padding:6px; border:1px solid #e7eaf0; border-radius:5px; background:#fff; }
+  .col h4 { margin:0 0 6px; font-size:9px; color:#66727d; } .ticket { height:38px; padding:5px; margin-bottom:5px; border-radius:4px; background:#eef3ff; } .ticket.warn{background:#f5ecd8;} .ticket.done{background:#eaf9f4;} .ticket i { display:block; width:72%; height:5px; border-radius:2px; background:#b9c5e6; } .ticket span { display:block; width:48%; height:5px; margin-top:5px; border-radius:2px; background:#d7dde8; }
+  .table { border:1px solid #e7eaf0; border-radius:6px; overflow:hidden; background:#fff; } .thead,.tr { display:grid; grid-template-columns:1.3fr .9fr .7fr .8fr; gap:6px; padding:8px; align-items:center; } .thead { background:#f7f8fb; } .thead b,.tr span { height:7px; border-radius:3px; background:#dfe5ef; } .tr { border-top:1px solid #eff1f5; } .tr .stage { height:16px; border-radius:4px; background:#dbe5ff; } .tr .stage.warn{background:#f5ecd8;} .tr .stage.done{background:#eaf9f4; }
+  .foot { padding:0 17px 16px; color:#66727d; font-size:11px; line-height:1.55; }
+  @media(max-width:800px){.compare{grid-template-columns:1fr;}}
+</style>
+
+<div class="compare">
+  <div class="choice" data-choice="C1" onclick="toggleSelect(this)">
+    <div class="choice-head"><div><h3>C1 · 五列阶段看板</h3><p>更直观地看“卡在哪一段”</p></div><div class="badge">C1</div></div>
+    <div class="mock"><div class="filter"></div><div class="kanban"><div class="col"><h4>需求评审</h4><div class="ticket"><i></i><span></span></div><div class="ticket"><i></i><span></span></div></div><div class="col"><h4>图纸发布</h4><div class="ticket warn"><i></i><span></span></div></div><div class="col"><h4>样品确认</h4><div class="ticket"><i></i><span></span></div><div class="ticket"><i></i><span></span></div></div><div class="col"><h4>正式投产</h4><div class="ticket done"><i></i><span></span></div></div><div class="col"><h4>交付</h4><div class="ticket done"><i></i><span></span></div></div></div></div>
+    <div class="foot">适合晨会、排程和管理层快速扫视。建议每列只显示项目编号、产品、交期、风险和当前阻断，避免把看板做成完整详情页。</div>
+  </div>
+
+  <div class="choice" data-choice="C2" onclick="toggleSelect(this)">
+    <div class="choice-head"><div><h3>C2 · 按阶段分组的紧凑列表</h3><p>更适合大量项目与精确筛选</p></div><div class="badge">C2</div></div>
+    <div class="mock"><div class="filter"></div><div class="table"><div class="thead"><b></b><b></b><b></b><b></b></div><div class="tr"><span></span><span></span><div class="stage"></div><span></span></div><div class="tr"><span></span><span></span><div class="stage warn"></div><span></span></div><div class="tr"><span></span><span></span><div class="stage done"></div><span></span></div><div class="tr"><span></span><span></span><div class="stage"></div><span></span></div><div class="tr"><span></span><span></span><div class="stage done"></div><span></span></div></div></div>
+    <div class="foot">适合 50+ 项目、复杂筛选和批量操作。流程感弱一些，但不会出现横向滚动和卡片过窄的问题；可用阶段色带保留流程识别。</div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:20px">我的建议：默认 C1 看板；当项目数超过 30 或用户进入批量处理模式时，切换到 C2 列表。</p>

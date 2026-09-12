@@ -1,7 +1,7 @@
 package com.nso.framework.redis;
 
 import com.nso.business.core.BusinessLockPort;
-import com.nso.common.exception.BusinessException;
+import com.nso.shared.exception.BusinessException;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.context.annotation.Profile;
@@ -10,19 +10,25 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-/** Production adapter for concurrency-sensitive state transitions. */
+// Redisson 分布式业务锁适配器。
 @Component
 @Profile("!test")
 public class RedissonBusinessLockAdapter implements BusinessLockPort {
 
+    // 获取锁的最长等待秒数
     private static final long WAIT_SECONDS = 5;
+
+    // 锁自动释放秒数
     private static final long LEASE_SECONDS = 60;
+
+    // Redisson客户端
     private final RedissonClient redissonClient;
 
     public RedissonBusinessLockAdapter(RedissonClient redissonClient) {
         this.redissonClient = redissonClient;
     }
 
+    // 在指定分布式锁内执行业务操作。
     @Override
     public <T> T withLock(String key, Supplier<T> action) {
         RLock lock = redissonClient.getLock("nso:business:" + key);
@@ -30,12 +36,14 @@ public class RedissonBusinessLockAdapter implements BusinessLockPort {
         try {
             acquired = lock.tryLock(WAIT_SECONDS, LEASE_SECONDS, TimeUnit.SECONDS);
             if (!acquired) {
-                throw BusinessException.ruleBlock("BUSINESS_LOCK_BUSY", "操作正在处理中，请稍后重试", key, "available", "刷新后重试");
+                throw BusinessException.ruleBlock(
+                        "BUSINESS_LOCK_BUSY", "操作正在处理中，请稍后重试", key, "available", "刷新后重试");
             }
             return action.get();
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
-            throw BusinessException.ruleBlock("BUSINESS_LOCK_INTERRUPTED", "等待并发锁时被中断", key, "available", "重试操作");
+            throw BusinessException.ruleBlock(
+                    "BUSINESS_LOCK_INTERRUPTED", "等待并发锁时被中断", key, "available", "重试操作");
         } finally {
             if (acquired && lock.isHeldByCurrentThread()) {
                 lock.unlock();

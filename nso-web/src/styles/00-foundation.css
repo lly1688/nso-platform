@@ -1,0 +1,153 @@
+/* NSO 基础设计令牌：与参考工作台保持同一套冷灰、柔和蓝与数据语义。 */
+:root {
+    --nso-blue: #5d87ff;
+    --nso-blue-dark: #456dd9;
+    --nso-blue-soft: #eef3ff;
+    --nso-blue-faint: #f6f8ff;
+    --nso-ink: #29343d;
+    --nso-ink-soft: #4e5b66;
+    --nso-muted: #66727d;
+    --nso-faint: #9aa4ae;
+    --nso-canvas: #f5f7fb;
+    --nso-surface: #ffffff;
+    --nso-surface-soft: #f8f9fc;
+    --nso-sidebar: #ffffff;
+    --nso-border: #e7eaf0;
+    --nso-border-strong: #d7dde8;
+    --nso-divider: #eff1f5;
+    --nso-danger: #b95750;
+    --nso-danger-dark: #873c36;
+    --nso-danger-soft: #f7e5e2;
+    --nso-warning: #b18435;
+    --nso-warning-dark: #76571f;
+    --nso-warning-soft: #f5ecd8;
+    --nso-success: #2aaf8a;
+    --nso-success-dark: #16896e;
+    --nso-success-soft: #eaf9f4;
+    --nso-radius-sm: 6px;
+    --nso-radius: 8px;
+    --nso-radius-lg: 12px;
+    --nso-shadow-sm: 0 1px 3px rgba(37, 55, 88, .035);
+    --nso-shadow-md: 0 8px 24px -12px rgba(37, 55, 88, .14), 0 2px 5px rgba(37, 55, 88, .04);
+    --nso-shadow-lg: 0 24px 56px -22px rgba(37, 55, 88, .18);
+    --nso-ease: 180ms cubic-bezier(.2, .7, .2, 1);
+    --nso-z-sidebar: 10;
+    --nso-z-topbar: 20;
+    color: var(--nso-ink);
+    background: var(--nso-canvas);
+    font-family: "Segoe UI", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei UI", "Noto Sans SC", system-ui, sans-serif;
+    font-size: 14px;
+    font-synthesis: none;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.5;
+    text-rendering: optimizeLegibility;
+
+    --el-color-primary: var(--nso-blue);
+    --el-color-primary-dark-2: var(--nso-blue-dark);
+    --el-color-primary-light-3: #8eabff;
+    --el-color-primary-light-5: #b2c5ff;
+    --el-color-primary-light-7: #d2ddff;
+    --el-color-primary-light-8: #e0e8ff;
+    --el-color-primary-light-9: var(--nso-blue-soft);
+    --el-color-success: var(--nso-success);
+    --el-color-warning: var(--nso-warning);
+    --el-color-danger: var(--nso-danger);
+    --el-color-info: var(--nso-blue);
+    --el-border-color: var(--nso-border);
+    --el-border-color-light: var(--nso-divider);
+    --el-border-color-lighter: #f4f5f8;
+    --el-text-color-primary: var(--nso-ink);
+    --el-text-color-regular: var(--nso-ink-soft);
+    --el-text-color-secondary: var(--nso-muted);
+    --el-text-color-placeholder: var(--nso-faint);
+    --el-fill-color-blank: var(--nso-surface);
+    --el-fill-color-light: var(--nso-surface-soft);
+    --el-fill-color-lighter: #fbfcfe;
+    --el-bg-color-page: var(--nso-canvas);
+    --el-border-radius-base: var(--nso-radius);
+    --el-border-radius-small: var(--nso-radius-sm);
+    --el-font-family: inherit;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    scroll-behavior: smooth;
+}
+
+body,
+#app {
+    min-height: 100%;
+    margin: 0;
+}
+
+body {
+    min-width: 320px;
+    overflow-x: hidden;
+    background: var(--nso-canvas);
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    color: inherit;
+}
+
+a {
+    color: inherit;
+}
+
+::selection {
+    background: #dbe5ff;
+    color: var(--nso-ink);
+}
+
+:focus-visible {
+    outline: 2px solid var(--nso-blue);
+    outline-offset: 2px;
+}
+
+* {
+    scrollbar-color: #c5ceda transparent;
+    scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: #c5ceda;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.skip-link {
+    position: fixed;
+    z-index: 100;
+    top: 8px;
+    left: 8px;
+    padding: 8px 12px;
+    border-radius: var(--nso-radius-sm);
+    background: var(--nso-blue-dark);
+    color: #fff;
+    text-decoration: none;
+    transform: translateY(-150%);
+    transition: transform var(--nso-ease);
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}

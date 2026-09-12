@@ -1,0 +1,303 @@
+/* 全站响应式规则，断点与参考工作台对齐。 */
+@media print {
+    .app-shell,
+    .topbar,
+    .sidebar,
+    .flow-qr-card:not(:has(.flow-qr-card__image)) {
+        display: none !important;
+    }
+
+    .flow-qr-card {
+        border: 0;
+        box-shadow: none;
+    }
+}
+
+@media (max-width: 1280px) {
+    .metric-grid,
+    .dashboard-skeleton {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .dashboard-chart-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .project-summary__meta {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1024px) {
+    .dashboard-chart-grid,
+    .dashboard-workspace,
+    .project-workspace,
+    .task-risk-dashboard,
+    .two-column,
+    .system-panel-grid,
+    .module-panel-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .project-workspace__side {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .task-rule-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 880px) {
+    .app-shell,
+    .app-shell--collapsed {
+        grid-template-columns: 64px minmax(0, 1fr);
+    }
+
+    .brand,
+    .nav-item {
+        justify-content: center;
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .brand-logo__copy,
+    .nav-item span,
+    .create-project span {
+        display: none !important;
+    }
+
+    .create-project {
+        width: 40px;
+        margin-right: auto;
+        margin-left: auto;
+        padding: 0;
+    }
+
+    .nav-list {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .rail-toggle {
+        display: none;
+    }
+
+    .topbar {
+        padding-right: 16px;
+        padding-left: 16px;
+    }
+
+    .topbar-leading {
+        gap: 14px;
+    }
+
+    .topbar-context {
+        min-width: 108px;
+        max-width: 150px;
+    }
+
+    .content {
+        padding: 20px 16px 30px;
+    }
+
+    .profile-layout,
+    .document-workspace,
+    .system-layout,
+    .module-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 680px) {
+    .topbar {
+        gap: 8px;
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+    .topbar-leading {
+        min-width: 0;
+        flex: 1 1 auto;
+        gap: 10px;
+    }
+
+    .global-search {
+        width: auto;
+        min-width: 100px;
+        flex: 1 1 auto;
+    }
+
+    .top-actions {
+        gap: 2px;
+    }
+
+    .content {
+        padding: 18px 14px 32px;
+    }
+
+    .toolbar,
+    .toolbar-left {
+        align-items: stretch;
+        flex-wrap: wrap;
+    }
+
+    .toolbar-left,
+    .dashboard-search-input {
+        width: 100%;
+    }
+
+    .metric-grid,
+    .dashboard-skeleton {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .dashboard-heading {
+        display: grid;
+        align-items: start;
+    }
+
+    .dashboard-filters {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .dashboard-period {
+        flex: 1 1 120px;
+    }
+
+    .dashboard-range {
+        width: 100%;
+        order: 3;
+    }
+
+    .project-summary,
+    .milestone-panel {
+        padding: 18px 16px;
+    }
+
+    .project-summary__head,
+    .system-heading,
+    .module-heading {
+        display: grid;
+        align-items: start;
+    }
+
+    .milestones {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .milestone {
+        grid-template-columns: 34px 1fr;
+        justify-items: start;
+        padding: 0;
+        text-align: left;
+    }
+
+    .milestone:not(:last-child)::after {
+        top: 32px;
+        left: 15px;
+        width: 2px;
+        height: 30px;
+    }
+
+    .milestone__label {
+        margin: 0 0 0 12px;
+    }
+
+    .milestone__date {
+        grid-column: 2;
+        margin: 2px 0 0 12px;
+    }
+
+    .project-workspace__side,
+    .confirm-summary,
+    .profile-form__grid,
+    .login-recovery-pair {
+        grid-template-columns: 1fr;
+    }
+
+    .system-subnav,
+    .module-subnav {
+        margin-right: -14px;
+        margin-left: -14px;
+        padding-right: 14px;
+        padding-left: 14px;
+        overflow-x: auto;
+        border-right: 0;
+        border-left: 0;
+        border-radius: 0;
+    }
+
+    .task-create-form > .el-select,
+    .task-create-form > .el-input,
+    .task-create-form > .el-date-editor,
+    .system-form > .el-input,
+    .system-form > .el-select,
+    .system-form > .el-input-number {
+        width: auto;
+        flex: 1 1 160px;
+    }
+
+    .task-rule-list {
+        grid-template-columns: 1fr;
+    }
+
+    .task-risk-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .task-blocker-list li {
+        grid-template-columns: 1fr;
+    }
+
+    .el-dialog__header,
+    .el-dialog__body,
+    .el-dialog__footer,
+    .el-drawer__body {
+        padding-right: 16px;
+        padding-left: 16px;
+    }
+}
+
+@media (max-width: 570px) {
+    .topbar-context {
+        display: none;
+    }
+
+    .top-actions > .el-button:nth-child(2),
+    .user-menu__text {
+        display: none;
+    }
+
+    .user-menu {
+        padding-right: 3px;
+    }
+
+    .panel-header,
+    .panel-body,
+    .dashboard-panel__header {
+        padding-right: 14px;
+        padding-left: 14px;
+    }
+
+    .pagination-bar {
+        align-items: flex-end;
+        flex-direction: column;
+        gap: 6px;
+        overflow-x: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}

@@ -1,0 +1,55 @@
+/* 客户确认页面布局。 */
+.public-page {
+    display: grid;
+    min-height: 100dvh;
+    place-items: center;
+    padding: 28px;
+    background: var(--nso-canvas);
+}
+
+.public-confirm {
+    width: min(760px, 100%);
+    padding: 28px;
+    border: 1px solid var(--nso-border);
+    border-top: 3px solid var(--nso-blue);
+    border-radius: var(--nso-radius-lg);
+    background: #fff;
+    box-shadow: var(--nso-shadow-md);
+}
+
+.public-title h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.public-title p {
+    margin: 6px 0 20px;
+    color: var(--nso-muted);
+}
+
+.confirm-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.confirm-summary div {
+    padding: 14px;
+    border: 1px solid var(--nso-border);
+    border-radius: var(--nso-radius);
+    background: var(--nso-surface-soft);
+}
+
+.confirm-summary span, .confirm-summary strong {
+    display: block;
+}
+
+.confirm-summary span {
+    color: var(--nso-muted);
+    font-size: 12px;
+}
+
+.confirm-summary strong {
+    margin-top: 6px;
+}

@@ -22,26 +22,26 @@ nso-platform/
 │  └─ development-plan/
 ├─ deploy/
 ├─ sql/
-├─ nso-common/
+├─ nso-shared/
 ├─ nso-system/
 ├─ nso-framework/
-├─ nso-quartz/
-├─ nso-generator/
+├─ nso-scheduler/
+├─ nso-scaffold/
 ├─ nso-admin/
-└─ nso-ui/
+└─ nso-web/
 ```
 
 ## 模块说明
 
 | 模块 | 类型 | 职责 |
 |------|------|------|
-| `nso-common` | Maven JAR | 返回对象、基础实体、枚举、异常、注解、工具类 |
+| `nso-shared` | Maven JAR | 返回对象、基础实体、枚举、异常、注解、工具类 |
 | `nso-system` | Maven JAR | 用户权限、系统管理以及九个核心业务域 |
 | `nso-framework` | Maven JAR | Spring Security、JWT、Redis、数据权限、全局异常、MyBatis 配置 |
-| `nso-quartz` | Maven JAR | 风险扫描、临期提醒、超时升级、消息重试、报表汇总 |
-| `nso-generator` | Maven JAR | 代码生成：Entity、Mapper、Service、Controller、Vue 页面 |
-| `nso-admin` | Maven JAR | Spring Boot 启动、登录认证、PC 和小程序 Controller、接口聚合 |
-| `nso-ui` | npm 工程 | Vue 3 + TypeScript + Element Plus PC 管理端 |
+| `nso-scheduler` | Maven JAR | 风险扫描、临期提醒、超时升级、消息重试、报表汇总 |
+| `nso-scaffold` | Maven JAR | 代码生成：Entity、Mapper、Service、Controller、Vue 页面 |
+| `nso-admin` | Maven JAR | Spring Boot 启动、登录认证、PC Controller、接口聚合 |
+| `nso-web` | npm 工程 | Vue 3 + TypeScript + Element Plus PC 管理端 |
 | `docs/product-specs` | — | 产品需求规格说明书 |
 | `docs/database` | — | 数据库设计和迁移说明 |
 | `docs/api` | — | 接口设计和联调说明 |
@@ -51,15 +51,15 @@ nso-platform/
 ## 后端依赖链
 
 ```text
-nso-common
+nso-shared
     ↑
 nso-system
     ↑
 nso-framework
 
-nso-quartz  ──→ nso-common、nso-system
-nso-generator ──→ nso-common
-nso-admin  ──→ nso-framework、nso-system、nso-quartz、nso-generator
+nso-scheduler  ──→ nso-shared、nso-system
+nso-scaffold ──→ nso-shared
+nso-admin  ──→ nso-framework、nso-system、nso-scheduler、nso-scaffold
 ```
 
 ## 接口前缀
@@ -67,7 +67,6 @@ nso-admin  ──→ nso-framework、nso-system、nso-quartz、nso-generator
 | 客户端 | 前缀 | 说明 |
 |--------|------|------|
 | PC 管理端 | `/api/v1/admin/**` | 登录、系统管理、业务管理 |
-| 微信小程序 | `/api/v1/mp/**` | 移动工作台、扫码、任务反馈 |
 | 客户短期确认 | `/api/v1/public/**` | 受限样品确认 |
 
 ## 本地基础服务
@@ -96,7 +95,7 @@ mvn -pl nso-admin -am spring-boot:run
 ```
 
 开发首个管理员由 `application-dev.yml` 的 `nso.bootstrap` 控制。只允许在开发
-环境使用该入口；启动后应立即修改默认密码。微信登录的 `dev:<用户名>` 模拟码同样
+环境使用该入口；启动后应立即修改默认密码。
 只在 `application-dev.yml` 明确开启时可用。
 
 ## 本地演示账号
@@ -124,7 +123,7 @@ docker compose config
 ## PC 管理端验证
 
 ```bash
-cd nso-ui
+cd nso-web
 npm install
 npm run build
 ```

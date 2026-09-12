@@ -15,12 +15,12 @@
     <packaging>jar</packaging>
 
     <name>nso-framework</name>
-    <description>框架模块：Security、AOP切面、全局异常、配置、微信认证</description>
+    <description>框架模块：Security、AOP切面、全局异常、配置</description>
 
     <dependencies>
         <dependency>
             <groupId>com.nso</groupId>
-            <artifactId>nso-common</artifactId>
+            <artifactId>nso-shared</artifactId>
         </dependency>
         <dependency>
             <groupId>com.nso</groupId>
@@ -48,6 +48,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

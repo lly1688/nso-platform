@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">智慧非标协同标识</title>
+  <desc id="desc">由 N 形结构与青色交接路径组成的工业协同标识</desc>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="14" fill="#EEF3FF"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="14" fill="none" stroke="#C9D6FF" stroke-width="1.5"/>
+  <path d="M14 13h10l16 19V13h10v38H40L24 32v19H14V13Z" fill="#5D87FF"/>
+  <path d="M24 13h5l15 18v10l-5-6-15-18V13Z" fill="#8DA8FF"/>
+  <circle cx="45" cy="13" r="3" fill="#B18435"/>
+</svg>

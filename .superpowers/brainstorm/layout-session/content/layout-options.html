@@ -1,0 +1,68 @@
+<h2>项目工作台：三种流程骨架</h2>
+<p class="subtitle">请选择更接近你想要的“少跳转、少堆积、下一步明确”的工作方式。点击卡片可记录选择。</p>
+
+<style>
+  .layout-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-top:22px; }
+  .layout-card { border:1px solid #d7dde8; border-radius:14px; background:#fff; overflow:hidden; cursor:pointer; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+  .layout-card:hover { transform:translateY(-3px); box-shadow:0 12px 28px rgba(37,55,88,.13); border-color:#7e9cf5; }
+  .layout-card .head { display:flex; justify-content:space-between; align-items:start; padding:14px 16px 10px; }
+  .layout-card h3 { margin:0; font-size:16px; color:#29343d; }
+  .layout-card .note { color:#66727d; font-size:12px; margin-top:4px; }
+  .layout-card .letter { width:26px; height:26px; border-radius:7px; display:grid; place-items:center; background:#eef3ff; color:#456dd9; font-weight:700; }
+  .mock { margin:0 12px 14px; border:1px solid #e7eaf0; border-radius:9px; background:#f5f7fb; padding:10px; min-height:212px; }
+  .mock-top { height:16px; background:#fff; border:1px solid #e7eaf0; border-radius:4px; margin-bottom:8px; }
+  .rail { display:flex; gap:4px; margin-bottom:9px; }
+  .rail span { flex:1; padding:6px 3px; border-radius:4px; background:#e7eaf0; color:#66727d; font-size:9px; text-align:center; }
+  .rail span.done { background:#dff4ec; color:#16896e; }
+  .rail span.now { background:#dbe5ff; color:#456dd9; font-weight:700; }
+  .cols { display:grid; grid-template-columns:1fr 72px; gap:8px; }
+  .main, .side, .row, .stage { border:1px solid #e7eaf0; background:#fff; border-radius:5px; }
+  .main { padding:9px; }
+  .side { padding:8px; }
+  .line { height:8px; border-radius:3px; background:#eef2f7; margin-bottom:7px; }
+  .line.wide { width:78%; } .line.mid { width:56%; } .line.short { width:38%; }
+  .action { height:18px; border-radius:4px; background:#5d87ff; margin-top:10px; }
+  .timeline { display:grid; grid-template-columns:13px 1fr; gap:8px; }
+  .timeline .dots { display:flex; flex-direction:column; align-items:center; gap:4px; padding-top:5px; }
+  .timeline .dot { width:8px; height:8px; border-radius:50%; background:#5d87ff; }
+  .timeline .connector { width:1px; flex:1; background:#d7dde8; }
+  .stage-list { display:grid; gap:6px; }
+  .stage { padding:8px; display:grid; grid-template-columns:8px 1fr auto; gap:7px; align-items:center; }
+  .stage i { width:8px; height:8px; border-radius:50%; background:#5d87ff; } .stage.done i { background:#2aaf8a; } .stage.wait i { background:#b9c1cc; }
+  .stage b { height:7px; width:70%; border-radius:3px; background:#eef2f7; } .stage small { width:25px; height:7px; border-radius:3px; background:#eef2f7; }
+  .footer { padding:0 16px 15px; color:#66727d; font-size:11px; line-height:1.5; }
+  @media (max-width:900px){ .layout-grid{grid-template-columns:1fr;} }
+</style>
+
+<div class="layout-grid">
+  <div class="layout-card" data-choice="A" onclick="toggleSelect(this)">
+    <div class="head"><div><h3>A · 横向阶段工作台</h3><div class="note">推荐：项目经理主视角</div></div><div class="letter">A</div></div>
+    <div class="mock">
+      <div class="mock-top"></div>
+      <div class="rail"><span class="done">需求</span><span class="now">图纸</span><span>样品</span><span>投产</span><span>交付</span></div>
+      <div class="cols"><div class="main"><div class="line wide"></div><div class="line mid"></div><div class="line"></div><div class="line short"></div><div class="action"></div></div><div class="side"><div class="line"></div><div class="line short"></div><div class="line"></div><div class="line mid"></div></div></div>
+    </div>
+    <div class="footer">上方只保留 5 个阶段；中间只展示当前阶段；右侧固定显示阻断、风险和下一步。变更与消息作为横向辅助层。</div>
+  </div>
+
+  <div class="layout-card" data-choice="B" onclick="toggleSelect(this)">
+    <div class="head"><div><h3>B · 纵向里程碑 + 行动队列</h3><div class="note">适合按时间推进</div></div><div class="letter">B</div></div>
+    <div class="mock">
+      <div class="mock-top"></div>
+      <div class="cols"><div class="main"><div class="timeline"><div class="dots"><div class="dot"></div><div class="connector"></div><div class="dot"></div><div class="connector"></div><div class="dot"></div></div><div><div class="line wide"></div><div class="line mid"></div><div class="line"></div><div class="line wide"></div><div class="line short"></div><div class="line"></div><div class="line mid"></div></div></div></div><div class="side"><div class="line"></div><div class="line short"></div><div class="line"></div><div class="action"></div></div></div>
+    </div>
+    <div class="footer">流程感最强，但长项目会变成长页面；用户需要上下滚动才能看到所有阶段，当前动作容易被时间线淹没。</div>
+  </div>
+
+  <div class="layout-card" data-choice="C" onclick="toggleSelect(this)">
+    <div class="head"><div><h3>C · 五阶段看板</h3><div class="note">适合批量项目调度</div></div><div class="letter">C</div></div>
+    <div class="mock">
+      <div class="mock-top"></div>
+      <div class="stage-list"><div class="stage done"><i></i><b></b><small></small></div><div class="stage done"><i></i><b></b><small></small></div><div class="stage"><i></i><b></b><small></small></div><div class="stage wait"><i></i><b></b><small></small></div><div class="stage wait"><i></i><b></b><small></small></div></div>
+      <div class="action"></div>
+    </div>
+    <div class="footer">一眼看到各项目卡在哪个阶段，适合管理层和排程；但单项目的详细上下文需要再打开抽屉或详情页。</div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:20px">我的初步建议：以 A 为主骨架，再吸收 C 的批量项目视图；B 只作为详情页里的历史时间轴。</p>

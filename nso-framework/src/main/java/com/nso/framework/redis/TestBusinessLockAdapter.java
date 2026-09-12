@@ -8,13 +8,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
-/** Keeps isolated tests deterministic when Redis is deliberately not started. */
+// 测试环境本地业务锁适配器。
 @Component
 @Profile("test")
 public class TestBusinessLockAdapter implements BusinessLockPort {
 
     private final ConcurrentHashMap<String, ReentrantLock> locks = new ConcurrentHashMap<>();
 
+    // 在进程内业务锁中执行测试操作。
     @Override
     public <T> T withLock(String key, Supplier<T> action) {
         ReentrantLock lock = locks.computeIfAbsent(key, ignored -> new ReentrantLock());

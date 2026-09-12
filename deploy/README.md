@@ -52,5 +52,5 @@ docker compose down
 
 ## 生产环境
 
-生产环境使用 `application-prod.yml`，数据库、Redis、JWT、MinIO、微信 AppID/Secret
-必须由环境变量或密钥管理系统注入。生产配置不提供默认凭据，也不会启用微信模拟登录。
+生产环境使用 `application-prod.yml`，数据库、Redis、JWT、MinIO
+必须由环境变量或密钥管理系统注入。生产配置不提供默认凭据。
